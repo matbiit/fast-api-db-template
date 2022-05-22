@@ -1,3 +1,6 @@
+cloudant
 fastapi
+pydantic
+python-dotenv
 typing
 uvicorn
