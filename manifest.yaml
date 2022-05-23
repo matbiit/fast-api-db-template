@@ -1,0 +1,5 @@
+applications:
+ - name: fast-api-eterj
+   random-route: true
+   memory: 64M
+   command: uvicorn main:app --host 0.0.0.0 --port 8080
