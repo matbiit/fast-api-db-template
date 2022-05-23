@@ -1,6 +1,6 @@
 from cloudant.query import Query
 from cloudant.client import Cloudant
-import os
+import json, os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -8,14 +8,31 @@ class CloudantConnection(object):
 
     def __init__(self):
 
-        user = os.getenv("CLOUDANT_USER")
-        pwd = os.getenv("CLOUDANT_PWD")
-        host = os.getenv("CLOUDANT_HOST")
-        database = os.getenv("CLOUDANT_DATABASE")
+        db_name = "stock"
         
-        self.client = Cloudant(user, pwd, url=host, connect=True, auto_renew=True)
+        if 'VCAP_SERVICES' in os.environ:
+            vcap = json.loads(os.getenv('VCAP_SERVICES'))
+            print('Found VCAP_SERVICES')
+            if 'cloudantNoSQLDB' in vcap:
+                creds = vcap['cloudantNoSQLDB'][0]['credentials']
+                user = creds['username']
+                password = creds['password']
+                url = 'https://' + creds['host']
+                self.client = Cloudant(user, password, url=url, connect=True, auto_renew=True)
+        elif "CLOUDANT_URL" in os.environ:
+            self.client = Cloudant(os.environ['CLOUDANT_USERNAME'], os.environ['CLOUDANT_PASSWORD'], url=os.environ['CLOUDANT_URL'], connect=True, auto_renew=True)
+        elif os.path.isfile('vcap-local.json'):
+            with open('vcap-local.json') as f:
+                vcap = json.load(f)
+                print('Found local VCAP_SERVICES')
+                creds = vcap['services']['cloudantNoSQLDB'][0]['credentials']
+                user = creds['username']
+                password = creds['password']
+                url = 'https://' + creds['host']
+                self.client = Cloudant(user, password, url=url, connect=True, auto_renew=True)
+
         self.client.connect()
-        self.database = self.client[database]
+        self.database = self.client[db_name]
 
     def retrieve_items(self):
         list = []
