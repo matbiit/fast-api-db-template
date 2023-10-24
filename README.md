@@ -1,4 +1,4 @@
-# fast-api-db-template
+# fast-api-db-template wxo
 
 This project has as its main objective to be a template for FastAPI with Cloudant DB. After that, upload to IBM Cloud.
 
