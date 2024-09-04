@@ -1,4 +1,4 @@
-# fast-api-db-template wxo
+# fast-api-db-template watsonx orchestrate demo
 
 This project has as its main objective to be a template for FastAPI with Cloudant DB. After that, upload to IBM Cloud.
 
